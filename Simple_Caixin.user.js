@@ -2,7 +2,7 @@
 // @name               极简财新
 // @name:en-US         Simple-Caixin
 // @namespace          http://www.caixin.com/
-// @version            0.1.20200701
+// @version            0.2.20200701
 // @description        清理页面无用元素（水印、分享按钮、导航栏、评论栏、网站地图等），调整板式，专注阅读
 // @description:en-US  A script which removed some unuseful elements on caixin.com
 // @author             EAK8T6Z
@@ -51,7 +51,9 @@ document.addEventListener('DOMContentLoaded', function (event) {
     document.getElementsByClassName("multimedia")[0].remove()
     document.getElementsByClassName("multimedia")[0].remove()//去图片、视听推荐
 
-
+    setTimeout(function () {
+            if(document.getElementById('Main_Content_Val').style.background.length>0){document.getElementById('Main_Content_Val').style = ""}
+        }, 5000);
 
 },true);
 
