@@ -28,13 +28,13 @@
 
 下面展示了本脚本使用前后的对比图。
 
-![使用前](https://raw.githubusercontent.com/EAK8T6Z/Simple-Caixin/master/pic/before1.png)
+![before1.png](https://i.loli.net/2020/07/01/d8usEg94zPD5XeM.png)
 
-![使用后](https://raw.githubusercontent.com/EAK8T6Z/Simple-Caixin/master/pic/after1.png)
+![after1.png](https://i.loli.net/2020/07/01/lSq3w4fB8LcAsmE.png)
 
-![使用前](https://raw.githubusercontent.com/EAK8T6Z/Simple-Caixin/master/pic/before2.png)
+![before2.png](https://i.loli.net/2020/07/01/oMURCOLPXTHdV17.png)
 
-![使用后](https://raw.githubusercontent.com/EAK8T6Z/Simple-Caixin/master/pic/after2.png)
+![after2.png](https://i.loli.net/2020/07/01/ErswvfIj7txSG5z.png)
 
 
 ## 隐私与安全
