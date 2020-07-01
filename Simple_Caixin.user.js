@@ -1,12 +1,14 @@
 // ==UserScript==
 // @name               极简财新
+// @name:en-US         Simple-Caixin
 // @namespace          http://www.caixin.com/
 // @version            0.1.20200701
 // @description        清理页面无用元素（水印、分享按钮、导航栏、评论栏、网站地图等），调整板式，专注阅读
+// @description:en-US  A script which removed some unuseful elements on caixin.com
 // @author             EAK8T6Z
 // @match              *://*.caixin.com/*
 // @homepageURL        https://github.com/EAK8T6Z/Simple-Caixin
-// @updateURL          https://github.com/EAK8T6Z/Simple-Caixin
+// @supportURL         https://github.com/EAK8T6Z/Simple-Caixin/issues
 // @run-at             document-start
 // @license            MPL 2.0
 // ==/UserScript==
