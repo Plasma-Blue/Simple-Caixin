@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name               极简财新
-// @name:en-US         Simple-Caixin
+// @name:en            Simple-Caixin
 // @namespace          http://www.caixin.com/
-// @version            0.3.20200701
+// @version            0.4.20200705
 // @description        清理页面无用元素（水印、分享按钮、导航栏、评论栏、网站地图等），调整板式，专注阅读
-// @description:en-US  A script which removed some unuseful elements on caixin.com
+// @description:en  A script which removed some unuseful elements on caixin.com
 // @author             EAK8T6Z
 // @match              *://*.caixin.com/*
 // @homepageURL        https://github.com/EAK8T6Z/Simple-Caixin
@@ -51,9 +51,10 @@ document.addEventListener('DOMContentLoaded', function (event) {
     document.getElementsByClassName("multimedia")[0].remove()
     document.getElementsByClassName("multimedia")[0].remove()//去图片、视听推荐
 
-    setTimeout(function () { //强力清除，网页加载完成后再来一遍
+    setTimeout(function () { //5秒后再次清除，避免屏蔽元素重新加载
             if(document.getElementById('Main_Content_Val').style.background.length>0){document.getElementById('Main_Content_Val').style = ""}
             if(document.getElementsByClassName("cx-wx-hb-tips").length>0){document.getElementsByClassName("cx-wx-hb-tips")[0].remove()}
+            if(document.getElementsByClassName("renewals").length>0){document.getElementsByClassName("renewals")[0].remove()} //去除财新通续费提醒
         }, 5000);
 
 },true);
