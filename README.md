@@ -45,7 +45,5 @@
 
 极简财新 (Simple-Caixin) 开源，使用 MPL-2.0 协议授权。
 
-脚本作者[@EAK8T6Z](https://github.com/EAK8T6Z)
-
 使用中有任何问题和意见，欢迎在 Github 的 issue 中提问。
 
