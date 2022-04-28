@@ -2,9 +2,9 @@
 // @name               极简财新
 // @name:en            Simple-Caixin
 // @namespace          http://www.caixin.com/
-// @version            0.4.20200705
+// @version            0.5.20220428
 // @description        清理页面无用元素（水印、分享按钮、导航栏、评论栏、网站地图等），调整板式，专注阅读
-// @description:en  A script which removed some unuseful elements on caixin.com
+// @description:en     A script which removed some unuseful elements on caixin.com
 // @author             EAK8T6Z
 // @match              *://*.caixin.com/*
 // @homepageURL        https://github.com/EAK8T6Z/Simple-Caixin
@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
     //底部清理
     document.getElementsByClassName("comment")[0].remove()//去评论
-    document.getElementsByClassName("map")[0].remove()//去底部网页地图
     if(document.getElementsByClassName("hot_word_v2").length>0){document.getElementsByClassName("hot_word_v2")[0].remove()}//去底部热词
     if(document.getElementsByClassName("bottom_tong_ad").length>0){document.getElementsByClassName("bottom_tong_ad")[0].remove()}//去底部广告
     document.getElementsByClassName("copyright")[0].remove()//去copyright
@@ -52,11 +51,15 @@ document.addEventListener('DOMContentLoaded', function (event) {
     document.getElementsByClassName("multimedia")[0].remove()//去图片、视听推荐
 
     setTimeout(function () { //5秒后再次清除，避免屏蔽元素重新加载
+        document.getElementsByClassName("share_list")[0].remove()
+        document.getElementsByClassName("pc-aivoice")[0].remove()
+        document.getElementsByClassName("pc-aivoice trial")[0].remove()
+    }, 500);
+
+    setTimeout(function () { //5秒后再次清除，避免屏蔽元素重新加载
             if(document.getElementById('Main_Content_Val').style.background.length>0){document.getElementById('Main_Content_Val').style = ""}
             if(document.getElementsByClassName("cx-wx-hb-tips").length>0){document.getElementsByClassName("cx-wx-hb-tips")[0].remove()}
             if(document.getElementsByClassName("renewals").length>0){document.getElementsByClassName("renewals")[0].remove()} //去除财新通续费提醒
         }, 5000);
 
 },true);
-
-
