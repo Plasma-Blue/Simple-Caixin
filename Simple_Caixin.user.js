@@ -29,6 +29,7 @@
             justify-content: center;
             gap: 2rem;
             box-sizing: border-box;
+            max-width: 970px;
         }
         /* 左侧导航项目布局 */
         .littlenavwarp > .left {
