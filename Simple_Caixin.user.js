@@ -2,64 +2,132 @@
 // @name               极简财新
 // @name:en            Simple-Caixin
 // @namespace          http://www.caixin.com/
-// @version            0.5.20220428
+// @version            0.6.20240806
 // @description        清理页面无用元素（水印、分享按钮、导航栏、评论栏、网站地图等），调整板式，专注阅读
 // @description:en     A script which removed some unuseful elements on caixin.com
 // @author             EAK8T6Z
 // @match              *://*.caixin.com/*
 // @homepageURL        https://github.com/EAK8T6Z/Simple-Caixin
 // @supportURL         https://github.com/EAK8T6Z/Simple-Caixin/issues
+// @grant              GM_addStyle
 // @run-at             document-start
 // @license            MPL 2.0
 // ==/UserScript==
 
-document.addEventListener('DOMContentLoaded', function (event) {
+(function () {
+    'use strict';
 
-    //格式调整
-    document.getElementsByClassName("conlf")[0].style.width = "990px" //宽屏模式
-    if(document.getElementsByClassName("media pip_none").length>0){document.getElementsByClassName("media pip_none")[0].style.padding = "20px"}//图片padding
+    GM_addStyle(`
+        /* 格式调整 */
+        /* 调整导航栏宽度 */
+        .littlenav, .littlenavwarp, .littlenavmore, .Nav {
+            width: 100% !important;
+        }
+        /* 设置导航栏布局 */
+        .littlenavwarp {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            box-sizing: border-box;
+            max-width: 970px;
+        }
+        /* 左侧导航项目布局 */
+        .littlenavwarp > .left {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        /* 导航菜单布局 */
+        .Nav > ul {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        /* 调整主要内容区域宽度和边距 */
+        .comMain {
+            max-width: 990px !important;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        /* 设置内容区域为全宽 */
+        .conlf {
+            width: 100% !important;
+        }
+        /* 调整图片边距 */
+        .media.pip_none {
+            padding: 20px;
+        }
 
-    //顶部清理
-    if(document.getElementsByClassName("sitenav").length>0){document.getElementsByClassName("sitenav")[0].remove()}//去导航栏
-    if(document.getElementsByClassName("vioce-box-cons").length>0){document.getElementsByClassName("vioce-box-cons")[0].remove()}//去听新闻图标
-    if(document.getElementsByClassName("icon_key").length>0){document.getElementsByClassName("icon_key")[0].remove()}//去标题图标
+        /* 响应式图片处理 */
+        /* 设置图片容器的基本样式 */
+        .media, .media_pic, .media_pic dt {
+            width: 100% !important;
+            max-width: 480px !important;
+            height: auto !important;
+            position: relative;
+        }
+        /* 设置图片容器的布局和背景 */
+        .media_pic {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            aspect-ratio: 3 / 2;
+            background-color: #f0f0f0; /* 图片加载前的背景色 */
+            min-height: unset !important;
+        }
+        /* 设置图片本身的样式 */
+        .media_pic img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto !important;
+            height: auto !important;
+            object-fit: contain !important;
+        }
+        /* 对不支持 aspect-ratio 的浏览器使用替代方案 */
+        @supports not (aspect-ratio: 1 / 1) {
+            .media_pic::before {
+                content: "";
+                display: block;
+                padding-top: 66.6%; /* 3:2 的宽高比 */
+            }
+            .media_pic img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .media dd {
+            width: min(100%, 480px);
+            box-sizing: border-box;
+        }
 
-    //正文清理
-    if(document.getElementsByClassName("subhead").length>0){document.getElementsByClassName("subhead")[0].remove()}
-    document.getElementById('Main_Content_Val').style = "" //去背景水印
-    document.getElementsByClassName("pip")[0].remove()//去相关推荐
-    document.getElementsByClassName("function01")[0].remove()//去社交网络按钮、去划线分享
-    if(document.getElementsByClassName("morelink").length>0){document.getElementsByClassName("morelink")[0].remove()}//去更多链接
-    if(document.getElementsByClassName("greenBg").length>0){document.getElementsByClassName("greenBg")[0].remove()}//去微信分享
-    if(document.getElementsByClassName("redBg").length>0){document.getElementsByClassName("redBg")[0].remove()}//去微博分享
-    if(document.getElementsByClassName("cx-wx-hb-tips").length>0){document.getElementsByClassName("cx-wx-hb-tips")[0].remove()}//我朋友不看财新
+        /* 中等屏幕设备调整 */
+        @media screen and (max-width: 998px) {
+            .logimage {
+                display: none; /* 隐藏财新 logo */
+            }
+            .Nav .navtabs {
+                margin: 0;
+            }
+            .littlenavwarp > .searchbox {
+                display: none; /* 隐藏搜索框 */
+            }
+        }
 
+        /* 隐藏不需要的元素 */
+        .sitenav, .vioce-box-cons, .icon_key, .subhead, .pip, .function01, .morelink,
+        .greenBg, .redBg, .cx-wx-hb-tips, .conri, .f_ri, .fenghui_code, .comment,
+        .hot_word_v2, .bottom_tong_ad, .copyright, .navBottom, .multimedia,
+        .share_list, .pc-aivoice, .pc-aivoice.trial, .renewals {
+            display: none !important;
+        }
 
-    //右侧清理
-    document.getElementsByClassName("conri")[0].remove()//去右侧栏
-    document.getElementsByClassName("f_ri")[0].remove() //去漂浮按钮
-    document.getElementsByClassName("fenghui_code")[0].remove() //去二维码
-
-    //底部清理
-    document.getElementsByClassName("comment")[0].remove()//去评论
-    if(document.getElementsByClassName("hot_word_v2").length>0){document.getElementsByClassName("hot_word_v2")[0].remove()}//去底部热词
-    if(document.getElementsByClassName("bottom_tong_ad").length>0){document.getElementsByClassName("bottom_tong_ad")[0].remove()}//去底部广告
-    document.getElementsByClassName("copyright")[0].remove()//去copyright
-    document.getElementsByClassName("navBottom")[0].remove()//去navBottom
-
-    document.getElementsByClassName("multimedia")[0].remove()
-    document.getElementsByClassName("multimedia")[0].remove()//去图片、视听推荐
-
-    setTimeout(function () { //5秒后再次清除，避免屏蔽元素重新加载
-        document.getElementsByClassName("share_list")[0].remove()
-        document.getElementsByClassName("pc-aivoice")[0].remove()
-        document.getElementsByClassName("pc-aivoice trial")[0].remove()
-    }, 500);
-
-    setTimeout(function () { //5秒后再次清除，避免屏蔽元素重新加载
-            if(document.getElementById('Main_Content_Val').style.background.length>0){document.getElementById('Main_Content_Val').style = ""}
-            if(document.getElementsByClassName("cx-wx-hb-tips").length>0){document.getElementsByClassName("cx-wx-hb-tips")[0].remove()}
-            if(document.getElementsByClassName("renewals").length>0){document.getElementsByClassName("renewals")[0].remove()} //去除财新通续费提醒
-        }, 5000);
-
-},true);
+        /* 移除背景水印 */
+        #Main_Content_Val {
+            background: none !important;
+        }
+    `);
+})();
