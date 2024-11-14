@@ -2,7 +2,7 @@
 // @name               极简财新
 // @name:en            Simple-Caixin
 // @namespace          http://www.caixin.com/
-// @version            0.6.20240806
+// @version            0.7.20241114
 // @description        清理页面无用元素（水印、分享按钮、导航栏、评论栏、网站地图等），调整板式，专注阅读
 // @description:en     A script which removed some unuseful elements on caixin.com
 // @author             EAK8T6Z
@@ -10,6 +10,9 @@
 // @homepageURL        https://github.com/EAK8T6Z/Simple-Caixin
 // @supportURL         https://github.com/EAK8T6Z/Simple-Caixin/issues
 // @grant              GM_addStyle
+// @grant              GM_getValue
+// @grant              GM_setValue
+// @grant              window.onurlchange
 // @run-at             document-start
 // @license            MPL 2.0
 // ==/UserScript==
@@ -17,6 +20,124 @@
 (function () {
     'use strict';
 
+    // 获取保存的设置
+    const hideAiVoice = GM_getValue('hideAiVoice', true);
+    const hideComment = GM_getValue('hideComment', false);
+
+    // 创建设置按钮
+    function createToggleButton() {
+        const container = document.createElement('div');
+        container.style.cssText = `
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0.3;
+            transition: all 0.3s;
+        `;
+
+        const icon = document.createElement('div');
+        icon.innerHTML = '⚙️';
+        icon.style.cssText = `
+            font-size: 16px;
+            cursor: pointer;
+        `;
+
+        const buttonContainer = document.createElement('div');
+        buttonContainer.style.cssText = `
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+        `;
+
+        // 语音按钮
+        const aiButton = document.createElement('button');
+        aiButton.innerHTML = `语音: ${hideAiVoice ? '已隐藏' : '已显示'}`;
+        aiButton.style.cssText = `
+            padding: 5px 10px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+        `;
+
+        // 评论按钮
+        const commentButton = document.createElement('button');
+        commentButton.innerHTML = `评论: ${hideComment ? '已隐藏' : '已显示'}`;
+        commentButton.style.cssText = aiButton.style.cssText;
+
+        buttonContainer.appendChild(aiButton);
+        buttonContainer.appendChild(commentButton);
+        container.appendChild(icon);
+        container.appendChild(buttonContainer);
+
+        // 语音按钮点击事件
+        aiButton.addEventListener('click', () => {
+            const newValue = !GM_getValue('hideAiVoice', true);
+            GM_setValue('hideAiVoice', newValue);
+            aiButton.innerHTML = `语音: ${newValue ? '已隐藏' : '已显示'}`;
+            updateStyles();
+        });
+
+        // 评论按钮点击事件
+        commentButton.addEventListener('click', () => {
+            const newValue = !GM_getValue('hideComment', false);
+            GM_setValue('hideComment', newValue);
+            commentButton.innerHTML = `评论: ${newValue ? '已隐藏' : '已显示'}`;
+            updateStyles();
+        });
+
+        // 滚动监听
+        let scrollTimer;
+        window.addEventListener('scroll', () => {
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(() => {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                if (scrollTop <= 10) {
+                    container.style.transform = 'translateY(0)';
+                    container.style.opacity = '0.3';
+                } else {
+                    container.style.transform = 'translateY(-100px)';
+                    container.style.opacity = '0';
+                }
+            }, 100);
+        });
+
+        // 鼠标悬停效果
+        container.addEventListener('mouseenter', () => {
+            buttonContainer.style.display = 'flex';
+            container.style.opacity = '1';
+        });
+
+        container.addEventListener('mouseleave', () => {
+            buttonContainer.style.display = 'none';
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            container.style.opacity = scrollTop <= 10 ? '0.3' : '0';
+        });
+
+        document.body.appendChild(container);
+    }
+
+    // 更新样式
+    function updateStyles() {
+        const hideAiVoice = GM_getValue('hideAiVoice', true);
+        const hideComment = GM_getValue('hideComment', false);
+        
+        GM_addStyle(`
+            .pc-aivoice, .pc-aivoice.trial {
+                display: ${hideAiVoice ? 'none' : 'block'} !important;
+            }
+            .pc-comment {
+                display: ${hideComment ? 'none' : 'block'} !important;
+            }
+        `);
+    }
+
+    // 应用初始样式
     GM_addStyle(`
         /* 格式调整 */
         /* 调整导航栏宽度 */
@@ -121,7 +242,7 @@
         .sitenav, .vioce-box-cons, .icon_key, .subhead, .pip, .function01, .morelink,
         .greenBg, .redBg, .cx-wx-hb-tips, .conri, .f_ri, .fenghui_code, .comment,
         .hot_word_v2, .bottom_tong_ad, .copyright, .navBottom, .multimedia,
-        .share_list, .pc-aivoice, .pc-aivoice.trial, .renewals {
+        .share_list, .renewals {
             display: none !important;
         }
 
@@ -130,4 +251,14 @@
             background: none !important;
         }
     `);
+
+    // 应用语音相关样式
+    updateStyles();
+
+    // 等待 DOM 加载完成后添加按钮
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', createToggleButton);
+    } else {
+        createToggleButton();
+    }
 })();
