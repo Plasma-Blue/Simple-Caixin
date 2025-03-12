@@ -2,7 +2,7 @@
 // @name               极简财新
 // @name:en            Simple-Caixin
 // @namespace          http://www.caixin.com/
-// @version            0.7.20241114
+// @version            0.8.20250312
 // @description        清理页面无用元素（水印、分享按钮、导航栏、评论栏、网站地图等），调整板式，专注阅读
 // @description:en     A script which removed some unuseful elements on caixin.com
 // @author             EAK8T6Z
@@ -15,6 +15,7 @@
 // @grant              window.onurlchange
 // @run-at             document-start
 // @license            MPL 2.0
+// @changelog          0.8.20250312 - 调整了文章题图和图注的样式
 // ==/UserScript==
 
 (function () {
@@ -182,7 +183,7 @@
 
         /* 响应式图片处理 */
         /* 设置图片容器的基本样式 */
-        .media, .media_pic, .media_pic dt {
+        .media, .media_pic {
             width: 100% !important;
             max-width: 480px !important;
             height: auto !important;
@@ -191,11 +192,20 @@
         /* 设置图片容器的布局和背景 */
         .media_pic {
             display: flex;
+            flex-direction: column; /* 改为纵向排列 */
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            min-height: unset !important;
+        }
+        /* 设置图片容器中dt元素的样式 */
+        .media_pic dt {
+            width: 100% !important;
+            height: auto !important;
+            display: flex;
             justify-content: center;
             align-items: center;
             aspect-ratio: 3 / 2;
-            background-color: #f0f0f0; /* 图片加载前的背景色 */
-            min-height: unset !important;
         }
         /* 设置图片本身的样式 */
         .media_pic img {
@@ -204,6 +214,12 @@
             width: auto !important;
             height: auto !important;
             object-fit: contain !important;
+        }
+        /* 设置说明文字的样式 */
+        .media_pic dd {
+            width: 100%;
+            text-align: center; /* 文字居中 */
+            margin: 0 0 0 0;    /* 上下左右 margin 设为0 */
         }
         /* 对不支持 aspect-ratio 的浏览器使用替代方案 */
         @supports not (aspect-ratio: 1 / 1) {
